@@ -58,11 +58,7 @@ class _HomeState extends State<Home> {
                               "") {
                             print("Blank search");
                           } else {
-                            Navigator.pushReplacementNamed(
-                              context,
-                              "/loading",
-                              arguments: {"searchText": searchController.text},
-                            );
+                            getRecipe(searchController.text);
                           }
                         },
                         child: Container(
