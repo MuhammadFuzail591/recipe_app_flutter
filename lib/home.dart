@@ -51,8 +51,8 @@ class _HomeState extends State<Home> {
                           }
                         },
                         child: Container(
-                          child: Icon(Icons.search, color: Colors.blueAccent),
                           margin: EdgeInsets.fromLTRB(3, 0, 7, 0),
+                          child: Icon(Icons.search, color: Colors.blueAccent),
                         ),
                       ),
                       Expanded(
@@ -66,6 +66,23 @@ class _HomeState extends State<Home> {
                       ),
                     ],
                   ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "WHAT DO YOU WANT TO COOK TODAY?",
+                      style: TextStyle(fontSize: 33, color: Colors.white),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Let's Cook Something New!",
+                      style: TextStyle(fontSize: 20, color: Colors.white),
+                    ),
+                  ],
                 ),
               ),
             ],
