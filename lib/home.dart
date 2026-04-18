@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -8,7 +10,20 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  SearchController searchController = SearchController();
+  TextEditingController searchController = TextEditingController();
+
+  void getRecipe(String query) async {
+    String url = "https://www.themealdb.com/api/json/v1/1/search.php?s=$query";
+    Response response = await get(Uri.parse(url));
+    Map data = jsonDecode(response.body);
+    print(data);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getRecipe("Arrabiata");
+  }
 
   @override
   Widget build(BuildContext context) {
