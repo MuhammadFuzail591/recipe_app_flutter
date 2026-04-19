@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:recipe_app/model.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -10,13 +11,26 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  List<RecipeModel> recipeList = <RecipeModel>[];
   TextEditingController searchController = TextEditingController();
 
   void getRecipe(String query) async {
     String url = "https://www.themealdb.com/api/json/v1/1/search.php?s=$query";
     Response response = await get(Uri.parse(url));
     Map data = jsonDecode(response.body);
-    print(data);
+    // debugPrint(jsonEncode(data), wrapWidth: 1024);
+
+    data["meals"].forEach((meal) {
+      RecipeModel recipeModel = RecipeModel();
+      recipeModel = RecipeModel.fromMap(meal);
+      recipeList.add(recipeModel);
+      debugPrint(recipeList.toString());
+    });
+
+    recipeList.forEach((recipe) {
+      debugPrint(recipe.mealLabel);
+      debugPrint(recipe.mealId);
+    });
   }
 
   @override
@@ -56,7 +70,7 @@ class _HomeState extends State<Home> {
                         onTap: () {
                           if ((searchController.text).replaceAll(" ", "") ==
                               "") {
-                            print("Blank search");
+                            debugPrint("Blank search");
                           } else {
                             getRecipe(searchController.text);
                           }
