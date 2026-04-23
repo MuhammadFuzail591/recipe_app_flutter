@@ -17,8 +17,10 @@ class _HomeState extends State<Home> {
   void getRecipe(String query) async {
     String url = "https://www.themealdb.com/api/json/v1/1/search.php?s=$query";
     Response response = await get(Uri.parse(url));
-    Map data = jsonDecode(response.body);
+    Map data = await jsonDecode(response.body);
     // debugPrint(jsonEncode(data), wrapWidth: 1024);
+
+    // debugPrint("Moving Further");
 
     data["meals"].forEach((meal) {
       RecipeModel recipeModel = RecipeModel();
@@ -36,7 +38,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    getRecipe("chicken");
+    getRecipe("Beef");
   }
 
   @override
