@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:recipe_app/model.dart';
+import 'package:recipe_app/models/recipe_model.dart';
+import 'package:recipe_app/data/categories.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,7 +14,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<RecipeModel> recipeList = <RecipeModel>[];
   TextEditingController searchController = TextEditingController();
-
   void getRecipe(String query) async {
     String url = "https://www.themealdb.com/api/json/v1/1/search.php?s=$query";
     Response response = await get(Uri.parse(url));
