@@ -124,12 +124,42 @@ class _HomeState extends State<Home> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
+                          elevation: 0.0,
                           child: Stack(
                             children: [
                               ClipRRect(
+                                borderRadius: BorderRadius.circular(10.0),
                                 child: Image.network(
                                   recipeList[index].mealImageUrl,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: 200,
                                 ),
+                              ),
+                              Positioned(
+                                right: 0,
+                                left: 0,
+                                bottom: 0,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 5,
+                                    horizontal: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black45,
+                                  ),
+                                  child: Text(
+                                    recipeList[index].mealLabel,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                right: 0,
+                                child: Text(recipeList[index].mealArea),
                               ),
                             ],
                           ),

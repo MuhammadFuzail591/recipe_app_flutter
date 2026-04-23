@@ -2,13 +2,13 @@ class RecipeModel {
   String mealId;
   String mealLabel;
   String mealImageUrl;
-  String mealCategory;
+  String mealArea;
 
   RecipeModel({
     this.mealId = "000",
     this.mealLabel = "LABEL",
     this.mealImageUrl = "IMAGE",
-    this.mealCategory = "CATEGORY",
+    this.mealArea = "AREA",
   });
 
   factory RecipeModel.fromMap(Map recipe) {
@@ -16,7 +16,7 @@ class RecipeModel {
       mealId: recipe["idMeal"],
       mealLabel: recipe["strMeal"],
       mealImageUrl: recipe["strMealThumb"],
-      mealCategory: recipe["strCategory"],
+      mealArea: recipe["strArea"],
     );
   }
 }
