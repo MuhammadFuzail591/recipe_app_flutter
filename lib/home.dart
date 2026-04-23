@@ -158,8 +158,19 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                               Positioned(
-                                right: 0,
-                                child: Text(recipeList[index].mealArea),
+                                right: 5,
+                                top: 5,
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.black54,
+                                  ),
+                                  child: Text(
+                                    recipeList[index].mealArea,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
