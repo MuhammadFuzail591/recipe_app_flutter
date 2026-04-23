@@ -36,7 +36,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    getRecipe("Arrabiata");
+    getRecipe("chicken");
   }
 
   @override
@@ -115,9 +115,26 @@ class _HomeState extends State<Home> {
                   child: ListView.builder(
                     physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: 120,
+                    itemCount: recipeList.length,
                     itemBuilder: (context, index) {
-                      return Text("Muhammad Fuzail");
+                      return InkWell(
+                        onTap: () {},
+                        child: Card(
+                          margin: EdgeInsets.all(20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Stack(
+                            children: [
+                              ClipRRect(
+                                child: Image.network(
+                                  recipeList[index].mealImageUrl,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
                     },
                   ),
                 ),
