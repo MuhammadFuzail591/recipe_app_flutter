@@ -4,14 +4,14 @@ import 'package:http/http.dart';
 import 'package:recipe_app/models/recipe_model.dart';
 import 'package:recipe_app/data/categories.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Search extends StatefulWidget {
+  const Search({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Search> createState() => _SearchState();
 }
 
-class _HomeState extends State<Home> {
+class _SearchState extends State<Search> {
   bool isLoading = true;
   List<RecipeModel> recipeList = <RecipeModel>[];
   TextEditingController searchController = TextEditingController();
