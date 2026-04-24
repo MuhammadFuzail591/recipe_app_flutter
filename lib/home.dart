@@ -38,7 +38,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    getRecipe("Beef");
+    getRecipe("chicken");
   }
 
   @override
@@ -175,6 +175,74 @@ class _HomeState extends State<Home> {
                                 ),
                               ),
                             ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+
+                Container(
+                  height: 150,
+                  child: ListView.builder(
+                    itemCount: mealCategoryList.length,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: InkWell(
+                          onTap: () {},
+                          child: Card(
+                            margin: EdgeInsets.all(15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            ),
+                            elevation: 0.0,
+                            child: Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(18.0),
+                                  child: Image.network(
+                                    mealCategoryList[index].imageUrl,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 5,
+                                      horizontal: 10,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black45,
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(18),
+                                        bottomRight: Radius.circular(18),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          mealCategoryList[index].title,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );
