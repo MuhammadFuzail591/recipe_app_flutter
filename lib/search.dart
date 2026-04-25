@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:recipe_app/models/recipe_model.dart';
-import 'package:recipe_app/data/categories.dart';
 
 class Search extends StatefulWidget {
-  const Search({super.key});
+  final String query;
+  const Search({required this.query, super.key});
 
   @override
   State<Search> createState() => _SearchState();
@@ -32,17 +32,12 @@ class _SearchState extends State<Search> {
       });
       debugPrint(recipeList.toString());
     });
-
-    recipeList.forEach((recipe) {
-      debugPrint(recipe.mealLabel);
-      debugPrint(recipe.mealId);
-    });
   }
 
   @override
   void initState() {
     super.initState();
-    getRecipe("chicken");
+    getRecipe(widget.query);
   }
 
   @override
@@ -79,7 +74,13 @@ class _SearchState extends State<Search> {
                                 "") {
                               debugPrint("Blank search");
                             } else {
-                              getRecipe(searchController.text);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      Search(searchController.text),
+                                ),
+                              );
                             }
                           },
                           child: Container(
@@ -100,96 +101,6 @@ class _SearchState extends State<Search> {
                     ),
                   ),
                 ),
-
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "WHAT DO YOU WANT TO COOK TODAY?",
-                        style: TextStyle(fontSize: 33, color: Colors.white),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "Let's Cook Something New!",
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Container(
-                  height: 140,
-                  child: ListView.builder(
-                    itemCount: mealCategoryList.length,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 15,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: InkWell(
-                          onTap: () {},
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-                            elevation: 0.0,
-                            child: Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  child: Image.network(
-                                    mealCategoryList[index].imageUrl,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Positioned(
-                                  left: 0,
-                                  right: 0,
-                                  bottom: 0,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 5,
-                                      horizontal: 10,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black45,
-                                      borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(18),
-                                        bottomRight: Radius.circular(18),
-                                      ),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          mealCategoryList[index].title,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-
                 Container(
                   child: isLoading
                       ? CircularProgressIndicator()

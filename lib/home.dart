@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:recipe_app/models/recipe_model.dart';
 import 'package:recipe_app/data/categories.dart';
+import 'package:recipe_app/search.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -79,7 +80,13 @@ class _HomeState extends State<Home> {
                                 "") {
                               debugPrint("Blank search");
                             } else {
-                              getRecipe(searchController.text);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      Search(searchController.text),
+                                ),
+                              );
                             }
                           },
                           child: Container(
