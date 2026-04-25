@@ -78,7 +78,7 @@ class _SearchState extends State<Search> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      Search(searchController.text),
+                                      Search(query: searchController.text),
                                 ),
                               );
                             }

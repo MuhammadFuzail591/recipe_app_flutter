@@ -84,7 +84,7 @@ class _HomeState extends State<Home> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      Search(searchController.text),
+                                      Search(query: searchController.text),
                                 ),
                               );
                             }

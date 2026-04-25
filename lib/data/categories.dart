@@ -1,4 +1,4 @@
-import '../models/category_model.dart';
+import '../models/recipe_category_model.dart';
 
 const List<MealCategory> mealCategoryList = [
   MealCategory(
