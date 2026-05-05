@@ -50,7 +50,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            // _buildTitleSection(),
+            _buildTitleSection(),
             // _buildIngredients(),
             // _buildInstructions(),
           ],
@@ -68,7 +68,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
             bottomRight: Radius.circular(30),
           ),
           child: Image.network(
-            meal.strMealThumb,
+            meal!.image,
             height: 300,
             width: double.infinity,
             fit: BoxFit.cover,
@@ -88,6 +88,38 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildTitleSection() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            meal!.title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.orange,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              meal!.area,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
