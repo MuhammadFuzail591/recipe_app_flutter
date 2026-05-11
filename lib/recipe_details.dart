@@ -51,7 +51,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
           children: [
             _buildHeader(),
             _buildTitleSection(),
-            // _buildIngredients(),
+            _buildIngredients(),
             // _buildInstructions(),
           ],
         ),
@@ -121,5 +121,22 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
         ],
       ),
     );
+  }
+
+  Widget _buildIngredients() {
+    List<Map<String, String>> ingredients = [];
+
+    for (int i = 1; i <= 20; i++) {
+      final ingredient = meal!.toJson()['strIngredients$i'];
+      final measure = meal!.toJson()['strMeasure$i'];
+
+      if (ingredient != null &&
+          ingredient.toString().isNotEmpty &&
+          ingredient.toString().trim() != "") {
+        ingredients.add({"ingredient": ingredient, "measure": measure ?? ""});
+      }
+    }
+
+    return Placeholder(); 
   }
 }
