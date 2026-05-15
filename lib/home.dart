@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:recipe_app/models/recipe_model.dart';
 import 'package:recipe_app/data/categories.dart';
+import 'package:recipe_app/recipe_details.dart';
 import 'package:recipe_app/search.dart';
 
 class Home extends StatefulWidget {
@@ -20,10 +21,6 @@ class _HomeState extends State<Home> {
     String url = "https://www.themealdb.com/api/json/v1/1/search.php?s=$query";
     Response response = await get(Uri.parse(url));
     Map data = await jsonDecode(response.body);
-    // debugPrint(jsonEncode(data), wrapWidth: 1024);
-
-    // debugPrint("Moving Further");
-
     data["meals"].forEach((meal) {
       RecipeModel recipeModel = RecipeModel();
       recipeModel = RecipeModel.fromMap(meal);
@@ -31,12 +28,6 @@ class _HomeState extends State<Home> {
       setState(() {
         isLoading = false;
       });
-      debugPrint(recipeList.toString());
-    });
-
-    recipeList.forEach((recipe) {
-      debugPrint(recipe.mealLabel);
-      debugPrint(recipe.mealId);
     });
   }
 
@@ -126,7 +117,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
 
-                Container(
+                SizedBox(
                   height: 140,
                   child: ListView.builder(
                     itemCount: mealCategoryList.length,
@@ -206,7 +197,16 @@ class _HomeState extends State<Home> {
                           itemCount: recipeList.length,
                           itemBuilder: (context, index) {
                             return InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RecipeDetailsPage(
+                                      mealId: recipeList[index].mealId,
+                                    ),
+                                  ),
+                                );
+                              },
                               child: Card(
                                 margin: EdgeInsets.all(20),
                                 shape: RoundedRectangleBorder(

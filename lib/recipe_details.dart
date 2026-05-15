@@ -52,7 +52,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
             _buildHeader(),
             _buildTitleSection(),
             _buildIngredients(),
-            // _buildInstructions(),
+            _buildInstructions(),
           ],
         ),
       ),
@@ -124,19 +124,80 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
   }
 
   Widget _buildIngredients() {
-    List<Map<String, String>> ingredients = [];
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Ingredients",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
 
-    for (int i = 1; i <= 20; i++) {
-      final ingredient = meal!.toJson()['strIngredients$i'];
-      final measure = meal!.toJson()['strMeasure$i'];
+          const SizedBox(height: 10),
 
-      if (ingredient != null &&
-          ingredient.toString().isNotEmpty &&
-          ingredient.toString().trim() != "") {
-        ingredients.add({"ingredient": ingredient, "measure": measure ?? ""});
-      }
-    }
+          ...List.generate(meal!.ingredients.length, (index) {
+            return ListTile(
+              leading: const Icon(Icons.check, color: Colors.orange),
 
-    return Placeholder(); 
+              title: Text(
+                meal!.ingredients[index],
+                style: const TextStyle(color: Colors.white),
+              ),
+
+              trailing: Text(
+                meal!.measures[index],
+                style: const TextStyle(color: Colors.grey),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInstructions() {
+    final steps = meal!.instructions.split(
+      RegExp(r'step \d+', caseSensitive: false),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Instructions",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          ...steps.asMap().entries.map((entry) {
+            if (entry.value.trim().isEmpty) return const SizedBox();
+
+            return Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white10,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                "Step ${entry.key}: ${entry.value.trim()}",
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
   }
 }
