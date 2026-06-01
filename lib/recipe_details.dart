@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:recipe_app/cook_mode.dart';
 import 'package:recipe_app/models/recipe_details_model.dart';
 
 class RecipeDetailsPage extends StatefulWidget {
@@ -51,6 +52,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
           children: [
             _buildHeader(),
             _buildTitleSection(),
+            _buildCookButton(),
             _buildIngredients(),
             _buildInstructions(),
           ],
@@ -119,6 +121,44 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // The main CTA on this page. Opens the playable cook-along mode, which
+  // calls Claude under the hood to turn `strInstructions` into timed steps.
+  Widget _buildCookButton() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+      child: SizedBox(
+        width: double.infinity,
+        height: 56,
+        child: ElevatedButton.icon(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => CookModePage(recipe: meal!),
+              ),
+            );
+          },
+          icon: const Icon(Icons.restaurant_menu, color: Colors.white),
+          label: const Text(
+            "Cook with me",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.orangeAccent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            elevation: 4,
+          ),
+        ),
       ),
     );
   }

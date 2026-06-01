@@ -580,3 +580,33 @@ Padding(
   search.
 - Animate the empty-state in with a fade — feels more polished than it
   just popping into existence.
+
+---
+
+# Update 5 — Playable Cook Mode (live AI)
+
+A big one. The "Cook with me" feature is in.
+
+**Full write-up:** see [`cook_mode.md`](./cook_mode.md) in the project root.
+That doc explains everything — the structured AI call, the file map, the UX
+choices, the setup steps, costs, and what could go wrong.
+
+**Quick summary of what was added:**
+
+- `lib/config/api_keys.dart` (git-ignored) + `api_keys.example.dart`
+  (template). Holds the Anthropic API key.
+- `lib/models/cook_step_model.dart` — the `CookStep` class.
+- `lib/services/cook_mode_service.dart` — calls Claude (claude-haiku-4-5)
+  via the Messages API with **tool use** to force the response into a
+  guaranteed JSON shape (no fragile string parsing).
+- `lib/cook_mode.dart` — new full-screen `CookModePage` with three states
+  (loading / error / player) and prev/pause/skip/next controls.
+- `lib/recipe_details.dart` — big orange "Cook with me" button between
+  the title and ingredients sections.
+- `.gitignore` — one line so the real key never gets committed.
+
+**🔑 BEFORE YOU RUN:** paste your real Anthropic key into
+`lib/config/api_keys.dart` (replace `YOUR_API_KEY`). Full instructions
+in `cook_mode.md`.
+
+`flutter analyze` → **No issues found.**
