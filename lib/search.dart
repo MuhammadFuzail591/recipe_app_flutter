@@ -16,18 +16,28 @@ class _SearchState extends State<Search> {
   bool isLoading = true;
   List<RecipeModel> recipeList = <RecipeModel>[];
   TextEditingController searchController = TextEditingController();
+
   void getRecipe(String query) async {
     String url = "https://www.themealdb.com/api/json/v1/1/search.php?s=$query";
     Response response = await get(Uri.parse(url));
     Map data = await jsonDecode(response.body);
 
-    data["meals"].forEach((meal) {
-      RecipeModel recipeModel = RecipeModel();
-      recipeModel = RecipeModel.fromMap(meal);
-      recipeList.add(recipeModel);
+    // When nothing matches, search.php returns {"meals": null}. Guard against
+    // it — calling .forEach on null would crash. We just stop the loader and
+    // let the build method render the friendly empty-state.
+    if (data["meals"] == null) {
       setState(() {
         isLoading = false;
       });
+      return;
+    }
+
+    data["meals"].forEach((meal) {
+      RecipeModel recipeModel = RecipeModel.fromMap(meal);
+      recipeList.add(recipeModel);
+    });
+    setState(() {
+      isLoading = false;
     });
   }
 
@@ -167,6 +177,44 @@ class _SearchState extends State<Search> {
                 Container(
                   child: isLoading
                       ? CircularProgressIndicator()
+                      : recipeList.isEmpty
+                      // Friendly empty-state: shown when the API returned
+                      // {"meals": null} for this query.
+                      ? Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 32,
+                            vertical: 60,
+                          ),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.no_meals,
+                                color: Colors.white70,
+                                size: 80,
+                              ),
+                              SizedBox(height: 20),
+                              Text(
+                                "No meals found",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                "We couldn't find anything for \"${widget.query}\".\nTry searching for something else!",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 15,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                       : ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,

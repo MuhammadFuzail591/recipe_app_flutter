@@ -18,19 +18,41 @@ class _HomeState extends State<Home> {
   List<RecipeModel> recipeList = <RecipeModel>[];
   TextEditingController searchController = TextEditingController();
   // Tracks which category card is currently selected (for the highlight).
-  String selectedCategory = "Chicken";
+  // Empty string = no category selected, we're showing the Featured list.
+  String selectedCategory = "";
+  // Title shown above the meal list. Flips between "Featured" and the
+  // tapped category name.
+  String sectionTitle = "Featured";
 
-  void getRecipe(String query) async {
-    String url = "https://www.themealdb.com/api/json/v1/1/search.php?s=$query";
+  // Loads the Featured meals shown when the app first opens.
+  // Uses the area-filter endpoint with area=India.
+  // Note: TheMealDB's area filter is inconsistent — for India the working
+  // value is "india" / "India" (country name), NOT "Indian" (demonym).
+  void getFeaturedMeals() async {
+    setState(() {
+      isLoading = true;
+      recipeList = <RecipeModel>[];
+      selectedCategory = "";
+      sectionTitle = "Featured";
+    });
+
+    String url = "https://www.themealdb.com/api/json/v1/1/filter.php?a=India";
     Response response = await get(Uri.parse(url));
     Map data = await jsonDecode(response.body);
-    data["meals"].forEach((meal) {
-      RecipeModel recipeModel = RecipeModel();
-      recipeModel = RecipeModel.fromMap(meal);
-      recipeList.add(recipeModel);
+
+    if (data["meals"] == null) {
       setState(() {
         isLoading = false;
       });
+      return;
+    }
+
+    data["meals"].forEach((meal) {
+      RecipeModel recipeModel = RecipeModel.fromMap(meal);
+      recipeList.add(recipeModel);
+    });
+    setState(() {
+      isLoading = false;
     });
   }
 
@@ -43,6 +65,7 @@ class _HomeState extends State<Home> {
       isLoading = true;
       recipeList = <RecipeModel>[];
       selectedCategory = category;
+      sectionTitle = category;
     });
 
     String url =
@@ -70,7 +93,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    getRecipe("chicken");
+    getFeaturedMeals();
   }
 
   @override
@@ -261,6 +284,21 @@ class _HomeState extends State<Home> {
                         ),
                       );
                     },
+                  ),
+                ),
+
+                // Section title — "Featured" on first load, switches to the
+                // category name when the user taps any category card.
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.fromLTRB(24, 16, 24, 4),
+                  child: Text(
+                    sectionTitle,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
 
