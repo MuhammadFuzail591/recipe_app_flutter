@@ -20,9 +20,6 @@ class _SearchState extends State<Search> {
     String url = "https://www.themealdb.com/api/json/v1/1/search.php?s=$query";
     Response response = await get(Uri.parse(url));
     Map data = await jsonDecode(response.body);
-    // debugPrint(jsonEncode(data), wrapWidth: 1024);
-
-    // debugPrint("Moving Further");
 
     data["meals"].forEach((meal) {
       RecipeModel recipeModel = RecipeModel();
@@ -31,7 +28,6 @@ class _SearchState extends State<Search> {
       setState(() {
         isLoading = false;
       });
-      debugPrint(recipeList.toString());
     });
   }
 
@@ -58,43 +54,109 @@ class _SearchState extends State<Search> {
           SingleChildScrollView(
             child: Column(
               children: [
-                // Search Bar
+                // Top row: back button + search bar
                 SafeArea(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    margin: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 20,
                     ),
                     child: Row(
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            if ((searchController.text).replaceAll(" ", "") ==
-                                "") {
-                              debugPrint("Blank search");
-                            } else {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      Search(query: searchController.text),
-                                ),
-                              );
-                            }
-                          },
-                          child: Container(
-                            margin: EdgeInsets.fromLTRB(3, 0, 7, 0),
-                            child: Icon(Icons.search, color: Colors.blueAccent),
+                        // Back to Home.
+                        Material(
+                          color: Colors.white24,
+                          shape: CircleBorder(),
+                          child: InkWell(
+                            customBorder: CircleBorder(),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                                size: 22,
+                              ),
+                            ),
                           ),
                         ),
+                        SizedBox(width: 8),
+                        // Search bar.
                         Expanded(
-                          child: TextField(
-                            controller: searchController,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Let's Cook Something!",
+                          child: Container(
+                            padding: EdgeInsets.only(left: 20, right: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(30),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 8,
+                                  offset: Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    controller: searchController,
+                                    textInputAction: TextInputAction.search,
+                                    onSubmitted: (value) {
+                                      if (value.replaceAll(" ", "") == "") {
+                                        debugPrint("Blank search");
+                                      } else {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                Search(query: value),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: "Let's Cook Something!",
+                                    ),
+                                  ),
+                                ),
+                                Material(
+                                  color: Colors.blueAccent,
+                                  shape: CircleBorder(),
+                                  child: InkWell(
+                                    customBorder: CircleBorder(),
+                                    onTap: () {
+                                      if ((searchController.text).replaceAll(
+                                            " ",
+                                            "",
+                                          ) ==
+                                          "") {
+                                        debugPrint("Blank search");
+                                      } else {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Search(
+                                              query: searchController.text,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.all(10),
+                                      child: Icon(
+                                        Icons.search,
+                                        color: Colors.white,
+                                        size: 22,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),

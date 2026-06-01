@@ -12,11 +12,13 @@ class RecipeModel {
   });
 
   factory RecipeModel.fromMap(Map recipe) {
+    // Note: the filter.php endpoint does NOT return strArea, so we fall back
+    // to a default ("--") to avoid a null crash on the area badge.
     return RecipeModel(
-      mealId: recipe["idMeal"],
-      mealLabel: recipe["strMeal"],
-      mealImageUrl: recipe["strMealThumb"],
-      mealArea: recipe["strArea"],
+      mealId: recipe["idMeal"] ?? "000",
+      mealLabel: recipe["strMeal"] ?? "LABEL",
+      mealImageUrl: recipe["strMealThumb"] ?? "IMAGE",
+      mealArea: recipe["strArea"] ?? "--",
     );
   }
 }
