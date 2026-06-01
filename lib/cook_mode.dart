@@ -1,11 +1,3 @@
-// Playable cook-along mode.
-//
-// Flow:
-//   1. Page opens → fires CookModeService.generateSteps(recipe).
-//   2. While loading: spinner + "Preparing your recipe…".
-//   3. On error: friendly message + retry button.
-//   4. On success: step-by-step player with timer, prev/skip/next controls.
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:recipe_app/models/cook_step_model.dart';
@@ -21,12 +13,10 @@ class CookModePage extends StatefulWidget {
 }
 
 class _CookModePageState extends State<CookModePage> {
-  // ---- Loading / error state -------------------------------------------
   bool isLoading = true;
   String? errorMessage;
   List<CookStep> steps = [];
 
-  // ---- Player state ----------------------------------------------------
   int currentIndex = 0;
   int remainingSeconds = 0;
   bool isPaused = false;
@@ -68,9 +58,6 @@ class _CookModePageState extends State<CookModePage> {
     }
   }
 
-  // Start/restart the countdown for the current step. If the step has no
-  // duration, the timer simply doesn't run and the UI shows a "Tap Next when
-  // done" hint.
   void _startStepTimer() {
     _ticker?.cancel();
     final duration = steps[currentIndex].durationSeconds;
@@ -118,8 +105,6 @@ class _CookModePageState extends State<CookModePage> {
     return "$m:$s";
   }
 
-  // ---- Build -----------------------------------------------------------
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,11 +126,10 @@ class _CookModePageState extends State<CookModePage> {
   Widget _buildBody() {
     if (isLoading) return _buildLoading();
     if (errorMessage != null) return _buildError();
-    if (steps.isEmpty) return _buildError(); // safety net
+    if (steps.isEmpty) return _buildError();
     return _buildPlayer();
   }
 
-  // ---- Loading view ----------------------------------------------------
   Widget _buildLoading() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -165,7 +149,6 @@ class _CookModePageState extends State<CookModePage> {
     );
   }
 
-  // ---- Error view ------------------------------------------------------
   Widget _buildError() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -223,7 +206,6 @@ class _CookModePageState extends State<CookModePage> {
     );
   }
 
-  // ---- Player view -----------------------------------------------------
   Widget _buildPlayer() {
     final step = steps[currentIndex];
     final isLastStep = currentIndex == steps.length - 1;
@@ -235,7 +217,6 @@ class _CookModePageState extends State<CookModePage> {
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Column(
         children: [
-          // Top row: close + "Step X of Y"
           Row(
             children: [
               IconButton(
@@ -252,11 +233,10 @@ class _CookModePageState extends State<CookModePage> {
                 ),
               ),
               const Spacer(),
-              const SizedBox(width: 48), // balance the close icon
+              const SizedBox(width: 48),
             ],
           ),
           const SizedBox(height: 8),
-          // Progress bar across the top
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
@@ -267,7 +247,6 @@ class _CookModePageState extends State<CookModePage> {
             ),
           ),
           const SizedBox(height: 32),
-          // Verb chip (optional, hidden when null)
           if (step.verb != null) ...[
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
@@ -288,7 +267,6 @@ class _CookModePageState extends State<CookModePage> {
             ),
             const SizedBox(height: 24),
           ],
-          // Instruction text — the headline of the screen
           Expanded(
             child: Center(
               child: AnimatedSwitcher(
@@ -307,7 +285,6 @@ class _CookModePageState extends State<CookModePage> {
               ),
             ),
           ),
-          // Timer or "tap next when done" hint
           if (hasTimer)
             Column(
               children: [
@@ -339,7 +316,6 @@ class _CookModePageState extends State<CookModePage> {
               style: TextStyle(color: Colors.white70, fontSize: 16),
             ),
           const SizedBox(height: 32),
-          // Controls row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -431,8 +407,8 @@ class _CookModePageState extends State<CookModePage> {
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(ctx); // close dialog
-              Navigator.pop(context); // close cook mode
+              Navigator.pop(ctx);
+              Navigator.pop(context);
             },
             child: const Text(
               "Back to recipe",

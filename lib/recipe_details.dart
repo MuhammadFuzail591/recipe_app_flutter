@@ -77,7 +77,6 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
           ),
         ),
 
-        // Back button
         Positioned(
           top: 40,
           left: 16,
@@ -125,8 +124,6 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
     );
   }
 
-  // The main CTA on this page. Opens the playable cook-along mode, which
-  // calls Claude under the hood to turn `strInstructions` into timed steps.
   Widget _buildCookButton() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),

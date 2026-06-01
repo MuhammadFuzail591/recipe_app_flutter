@@ -22,9 +22,6 @@ class _SearchState extends State<Search> {
     Response response = await get(Uri.parse(url));
     Map data = await jsonDecode(response.body);
 
-    // When nothing matches, search.php returns {"meals": null}. Guard against
-    // it — calling .forEach on null would crash. We just stop the loader and
-    // let the build method render the friendly empty-state.
     if (data["meals"] == null) {
       setState(() {
         isLoading = false;
@@ -64,7 +61,6 @@ class _SearchState extends State<Search> {
           SingleChildScrollView(
             child: Column(
               children: [
-                // Top row: back button + search bar
                 SafeArea(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -73,7 +69,6 @@ class _SearchState extends State<Search> {
                     ),
                     child: Row(
                       children: [
-                        // Back to Home.
                         Material(
                           color: Colors.white24,
                           shape: CircleBorder(),
@@ -93,7 +88,6 @@ class _SearchState extends State<Search> {
                           ),
                         ),
                         SizedBox(width: 8),
-                        // Search bar.
                         Expanded(
                           child: Container(
                             padding: EdgeInsets.only(left: 20, right: 6),
@@ -178,8 +172,6 @@ class _SearchState extends State<Search> {
                   child: isLoading
                       ? CircularProgressIndicator()
                       : recipeList.isEmpty
-                      // Friendly empty-state: shown when the API returned
-                      // {"meals": null} for this query.
                       ? Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: 32,

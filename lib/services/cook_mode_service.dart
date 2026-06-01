@@ -1,16 +1,3 @@
-// Calls Anthropic Claude to turn a raw TheMealDB recipe into a clean,
-// timed, sequential list of cook-along steps for the playable cook mode.
-//
-// How we force structured output:
-//   We define a single Anthropic "tool" called `submit_cook_steps` whose
-//   input_schema describes the JSON shape we want. We then set
-//   `tool_choice: {type: "tool", name: "submit_cook_steps"}` which forces
-//   Claude to respond by calling that tool. Claude's response contains the
-//   structured arguments as `input` — already validated against our schema.
-//
-// This is the official Anthropic pattern for structured outputs.
-// See: https://docs.anthropic.com/en/docs/build-with-claude/tool-use
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:recipe_app/config/api_keys.dart';
@@ -18,13 +5,9 @@ import 'package:recipe_app/models/cook_step_model.dart';
 import 'package:recipe_app/models/recipe_details_model.dart';
 
 class CookModeService {
-  // claude-haiku-4-5: fast, cheap, excellent at structured extraction.
   static const String _model = "claude-haiku-4-5";
   static const String _endpoint = "https://api.anthropic.com/v1/messages";
 
-  // Schema that the model's tool call MUST conform to.
-  // Each step gets an order, an instruction, an optional duration, and an
-  // optional verb hint. Duration is null when the recipe doesn't imply one.
   static const Map<String, dynamic> _toolSchema = {
     "type": "object",
     "properties": {
@@ -66,8 +49,6 @@ class CookModeService {
     "required": ["steps"],
   };
 
-  // Public entry point. Throws on any failure (network, API, parse) so the
-  // UI can catch it and show the retry state.
   static Future<List<CookStep>> generateSteps(RecipeDetailsModel recipe) async {
     if (ApiKeys.anthropic == "YOUR_API_KEY" || ApiKeys.anthropic.isEmpty) {
       throw Exception(
@@ -97,8 +78,6 @@ class CookModeService {
             "input_schema": _toolSchema,
           },
         ],
-        // Force Claude to respond by calling our tool. This is what makes
-        // the response shape guaranteed.
         "tool_choice": {"type": "tool", "name": "submit_cook_steps"},
         "messages": [
           {"role": "user", "content": prompt},
@@ -114,8 +93,6 @@ class CookModeService {
 
     final body = jsonDecode(response.body) as Map<String, dynamic>;
 
-    // The response shape is: { content: [ { type: "tool_use", input: {...} } ] }
-    // We look for the tool_use block and pull its `input`.
     final contentBlocks = body["content"] as List;
     final toolUse = contentBlocks.firstWhere(
       (block) => block["type"] == "tool_use",
@@ -131,11 +108,6 @@ class CookModeService {
         .toList();
   }
 
-  // Builds the user prompt. We give Claude:
-  //   - the meal name
-  //   - the ingredients with measures
-  //   - the raw instructions blob
-  // Plus explicit guidance for tricky cases (vague steps, "to taste", etc).
   static String _buildPrompt(RecipeDetailsModel recipe) {
     final ingredientsList = List.generate(
       recipe.ingredients.length,

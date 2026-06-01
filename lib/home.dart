@@ -17,17 +17,9 @@ class _HomeState extends State<Home> {
   bool isLoading = true;
   List<RecipeModel> recipeList = <RecipeModel>[];
   TextEditingController searchController = TextEditingController();
-  // Tracks which category card is currently selected (for the highlight).
-  // Empty string = no category selected, we're showing the Featured list.
   String selectedCategory = "";
-  // Title shown above the meal list. Flips between "Featured" and the
-  // tapped category name.
   String sectionTitle = "Featured";
 
-  // Loads the Featured meals shown when the app first opens.
-  // Uses the area-filter endpoint with area=India.
-  // Note: TheMealDB's area filter is inconsistent — for India the working
-  // value is "india" / "India" (country name), NOT "Indian" (demonym).
   void getFeaturedMeals() async {
     setState(() {
       isLoading = true;
@@ -56,11 +48,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-  // Fetches meals belonging to a category (e.g. "Seafood") using the
-  // filter.php endpoint. The shape of each meal here is smaller than what
-  // search.php returns (no strArea), so RecipeModel.fromMap was made tolerant.
   void getRecipeByCategory(String category) async {
-    // Reset the list and show the loader before firing a new request.
     setState(() {
       isLoading = true;
       recipeList = <RecipeModel>[];
@@ -73,7 +61,6 @@ class _HomeState extends State<Home> {
     Response response = await get(Uri.parse(url));
     Map data = await jsonDecode(response.body);
 
-    // Guard: if the API returns no meals for some reason, just stop the loader.
     if (data["meals"] == null) {
       setState(() {
         isLoading = false;
@@ -113,7 +100,6 @@ class _HomeState extends State<Home> {
           SingleChildScrollView(
             child: Column(
               children: [
-                // Search Bar
                 SafeArea(
                   child: Container(
                     padding: EdgeInsets.only(left: 20, right: 6),
@@ -131,8 +117,6 @@ class _HomeState extends State<Home> {
                     ),
                     child: Row(
                       children: [
-                        // Text field grows to fill available space; submitting
-                        // from the keyboard also triggers a search.
                         Expanded(
                           child: TextField(
                             controller: searchController,
@@ -155,7 +139,6 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                         ),
-                        // Search button on the right — looks tappable.
                         Material(
                           color: Colors.blueAccent,
                           shape: CircleBorder(),
@@ -224,7 +207,6 @@ class _HomeState extends State<Home> {
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(18),
-                          // Highlight the currently selected category.
                           border: isSelected
                               ? Border.all(color: Colors.orangeAccent, width: 3)
                               : null,
@@ -287,8 +269,6 @@ class _HomeState extends State<Home> {
                   ),
                 ),
 
-                // Section title — "Featured" on first load, switches to the
-                // category name when the user taps any category card.
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.fromLTRB(24, 16, 24, 4),
