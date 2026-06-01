@@ -610,3 +610,49 @@ choices, the setup steps, costs, and what could go wrong.
 in `cook_mode.md`.
 
 `flutter analyze` → **No issues found.**
+
+---
+
+# Update 6 — Android INTERNET permission fix
+
+## The bug
+On Ubuntu (Linux desktop / debug Android) the app worked fine. On a
+**release APK installed on a real phone**, every network call hung
+forever — the home screen, the search, everything stuck on spinners
+with no error visible.
+
+## The cause
+`android/app/src/main/AndroidManifest.xml` (the release manifest) did
+NOT have the `INTERNET` permission declared. Flutter's scaffolding
+puts that permission only in `android/app/src/debug/AndroidManifest.xml`
+— because the Flutter tool itself needs internet to do hot reload.
+Release builds get no internet permission by default.
+
+Without the permission, the `http` package's calls don't throw, they
+just **silently never resolve**. The futures stay pending forever and
+the UI sits on `isLoading = true`.
+
+## The fix
+Added one line to `android/app/src/main/AndroidManifest.xml`:
+
+```xml
+<uses-permission android:name="android.permission.INTERNET"/>
+```
+
+> 💡 **Lesson — Flutter "works in dev but not after install" pattern:**
+> This is one of the most common Flutter gotchas. Whenever you ship an
+> APK that hangs on network calls (but `flutter run` works), check this
+> manifest **first** before anything else.
+
+## How to apply the fix on your end
+
+After pulling these changes:
+
+```bash
+flutter clean
+flutter build apk --release
+```
+
+Then **uninstall the old APK** from the phone (Android can get confused
+about permission changes if you reinstall over the top) and install the
+new one.
